@@ -1,3 +1,3 @@
 export default function CategoryListAll() {
-  return (<></>)
+  return (<>Category List Page</>)
 }

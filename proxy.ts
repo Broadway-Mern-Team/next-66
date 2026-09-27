@@ -8,7 +8,8 @@ type Role = "admin" | "customer" | "seller"
 const ROUTE_ROLE: Record<string, Role> = {
   '/admin': "admin",
   "/customer": "customer",
-  "/seller": "seller"
+  "/seller": "seller",
+  "/cart": "customer"
 }
 
 
@@ -26,7 +27,7 @@ function redirectToLogin(request: NextRequest) {
 
 
 export const config = {
-  matcher: ["/admin/:path*", "/customer/:path*", "/seller/:path*"]
+  matcher: ["/admin/:path*", "/customer/:path*", "/seller/:path*", "/cart"]
 }
 
 export async function proxy(request: NextRequest) {
