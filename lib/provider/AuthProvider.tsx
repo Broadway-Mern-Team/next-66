@@ -46,7 +46,6 @@ export default function AuthProvider({children}: Readonly<{children: ReactNode}>
 
   useEffect(() => {
     const token = Cookies.get("token")
-
     return ()=> {
       if(token) {
         getLoggedInUser()
@@ -57,9 +56,9 @@ export default function AuthProvider({children}: Readonly<{children: ReactNode}>
   }, [])
 
   return (
-    loading ? 
-    <>Loading...</> : 
-    <>
+    // loading ? 
+    // <>Loading...</> : 
+    // <>
       <AuthContext.Provider
         value={{
           loggedInUser: loggedInUser,
@@ -69,6 +68,6 @@ export default function AuthProvider({children}: Readonly<{children: ReactNode}>
       >
         {children}
       </AuthContext.Provider>
-    </>
+    // </>
   )
 }
