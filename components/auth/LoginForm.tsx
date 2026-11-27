@@ -3,15 +3,47 @@
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { InputComponent } from "../ui/form/InputComponent";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginSchema } from "./auth.contract";
+import { z } from "zod";
+import { axiosClient } from "@/config/AxiosConfig";
+import Cookies from "js-cookie"
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/hooks/useAuth";
+import { IUserDetail } from "@/lib/types/AuthTypes";
+import { useEffect } from "react";
+
+
+export type LoginData = z.infer<typeof LoginSchema>
+
 
 export default function LoginForm() {
   const {control, handleSubmit} = useForm({
-    defaultValues: {username: "", password: ""}
+    defaultValues: {username: "", password: ""},
+    resolver: zodResolver(LoginSchema)
   })
+  const router = useRouter()
+  const {login, loggedInUser} = useAuth()
 
-  const loginSubmit = (data) => {
-    console.log(data)
-  }
+  const loginSubmit = async (data: LoginData) => {
+    try {
+      const userDetail = await login(data) as IUserDetail
+      toast.success("Welcome to admin Panel")
+      router.push("/"+userDetail.role)
+
+    } catch(exception) {
+      console.log(exception)
+      toast.error("Error logging In")
+    }
+  };
+
+  useEffect(() => {
+    if(loggedInUser) {
+      router.push("/"+loggedInUser.role)
+    }
+  }, [loggedInUser])
+
   return (
     <>
       <form

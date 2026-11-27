@@ -4,6 +4,11 @@ import { useForm } from "react-hook-form";
 import { FileUploadComponent, FormSubmitButtonComponent, InputComponent, SelectOptionComponent } from "../ui/form/InputComponent";
 import { RegisterData, RegistrationSchema } from "./auth.contract";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { axiosClient } from "@/config/AxiosConfig";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import {useEffect} from "react"
+import { useAuth } from "@/lib/hooks/useAuth";
 
 // Validation 
 
@@ -13,9 +18,29 @@ export default function RegisterForm() {
     resolver: zodResolver(RegistrationSchema)
   });
 
-  const userRegisterEvent = (data: RegisterData) => {
-    console.log(data);
+  const router = useRouter()
+  const {loggedInUser} = useAuth()
+
+  const userRegisterEvent = async (data: RegisterData) => {
+    try {
+      await axiosClient.post('/auth/register', data, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      })
+      toast.success("Your account has been registered successfully.")
+      router.push("/login")
+    } catch(exception) {
+      console.log({exception})
+      toast.error("Sorry! There was a problem while registering your account.")
+    }
   }
+
+   useEffect(() => {
+     if (loggedInUser) {
+       router.push("/" + loggedInUser.role);
+     }
+   }, [loggedInUser]);
 
   return (
     <>

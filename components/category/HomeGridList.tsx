@@ -1,8 +1,26 @@
+'use client'
+import {useEffect, useState} from "react"
+import { SingleCategoryData } from "@/lib/types/CategoryTypes";
 import Image from "next/image";
 import Link from "next/link";
+import { toast } from "sonner";
+import { axiosClient } from "@/config/AxiosConfig";
 
 export default function HomeGridList() {
-  
+  const [categories, setCategories] = useState<Array<SingleCategoryData>>([])
+  const getForHome = async () => {
+    try {
+      const { result } = await axiosClient.get("/category/getForHome") as {result: Array<SingleCategoryData>}
+      setCategories(result)
+    } catch {
+      toast.error("Error while fetching Categories")
+    }
+  }
+  useEffect(() => {
+    return () => {
+      getForHome()
+    }
+  }, [])
   return (
     <>
       <section className="bg-gray-100 p-10 flex flex-col gap-5 w-7xl mx-auto">
@@ -13,50 +31,30 @@ export default function HomeGridList() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-3">
-          <div className="w-full bg-white flex flex-col">
-            <div>
-              <Image
-                src={
-                  "https://img.drz.lazcdn.com/static/np/p/9b147f66b5a3234071bc283667dd5738.jpg"
-                }
-                width={200}
-                height={100}
-                className="w-50 h-25 object-contain"
-                alt="category name"
-                crossOrigin="anonymous"
-              />
-            </div>
-            <div className="p-2">
-              <Link
-                href={"/category/smart-phones"}
-                className="text-lg font-semibold text-teal-900 hover:underline"
-              >
-                Smart Phones
-              </Link>
-            </div>
-          </div>
-          <div className="w-full bg-white flex flex-col">
-            <div>
-              <Image
-                src={
-                  "https://img.drz.lazcdn.com/static/np/p/6c0fee63f2f1aa8e1476c81dc23ef628.png"
-                }
-                width={200}
-                height={100}
-                className="w-50 h-25 object-contain"
-                alt="category name"
-                crossOrigin="anonymous"
-              />
-            </div>
-            <div className="p-2">
-              <Link
-                href={"/category/traps-and-drains"}
-                className="text-lg font-semibold text-teal-900 hover:underline"
-              >
-                Traps and Drains
-              </Link>
-            </div>
-          </div>
+          {categories &&
+            categories.map((row: SingleCategoryData, index: number) => (
+              <div className="w-full bg-white flex flex-col" key={index}>
+                <div className="flex w-full items-center justify-center">
+                  <Image
+                    src={row.image.url}
+                    width={200}
+                    height={100}
+                    className="w-35 h-25 object-contain"
+                    alt="category name"
+                    crossOrigin="anonymous"
+                  />
+                </div>
+                <div className="p-2">
+                  <Link
+                    href={"/category/"+row.slug}
+                    className="text-lg font-semibold text-teal-900 hover:underline"
+                  >
+                    {row.title}
+                  </Link>
+                </div>
+              </div>
+            ))}
+
         </div>
       </section>
     </>

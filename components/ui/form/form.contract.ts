@@ -28,7 +28,7 @@ export type InputComponentProps<T extends FieldValues> = Readonly<{
 
 
 export type SingleOptionType = {
-  label: string, value: string
+  label: string, value: string | number
 }
 
 export type SelectOptionProps<T extends FieldValues> = Readonly<{

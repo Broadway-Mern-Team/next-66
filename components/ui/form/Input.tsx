@@ -60,7 +60,7 @@ export const SelectOption = <T extends FieldValues>({
                 {options &&
                   options.map((option: SingleOptionType, i: number) => {
                     return (
-                      <option key={i} value={option.value}>
+                      <option key={i} value={option.value as string}>
                         {option.label}
                       </option>
                     );

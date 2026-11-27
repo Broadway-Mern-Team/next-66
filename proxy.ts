@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { use } from "react";
+import { axiosClient } from "./config/AxiosConfig";
+import { GetUserDetailReponse, IUserDetail } from "./lib/types/AuthTypes";
 
 
 type Role = "admin" | "customer" | "seller"
@@ -51,7 +53,12 @@ export async function proxy(request: NextRequest) {
   }
 
   try {
-    const userDetail = {role: "admin"};
+    const response = await axiosClient.get("/auth/dashboard", {
+      headers: {
+        Authorization: "Bearer "+token
+      }
+    }) as GetUserDetailReponse
+    const userDetail = response.result as IUserDetail
 
     const role = userDetail.role as Role | undefined;
     if(role !== requiredRole) {

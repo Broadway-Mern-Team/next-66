@@ -1,14 +1,19 @@
 import { Metadata } from "next";
-import { Roboto_Mono, Roboto_Serif } from "next/font/google";
+import { Montserrat, Roboto_Mono } from "next/font/google";
 import "../globals.css"
-import Link from "next/link";
+import {Toaster} from "sonner"
+import { AdminSidebar } from "@/components/partials/AdminSidebar";
+import { AdminHeader } from "@/components/partials/AdminHeader";
+import { AdminFooter } from "@/components/partials/AdminFooter";
+import AuthProvider from "@/lib/provider/AuthProvider";
+
 
 export const metadata: Metadata = {
   title: "Admin || Dashboard Page",
   description: "This is an admin dashboard section"
 }
 
-const RobotoSans = Roboto_Serif({
+const RobotoSans = Montserrat({
   variable: "--font-custom-sans",
   subsets: ['latin']
 })
@@ -17,26 +22,33 @@ const RobotoMono = Roboto_Mono({
   subsets: ['latin']
 })
 
+
+
 export default function CmsLayout({children}: LayoutProps<"/">) {
   return (
     <>
-      <html>
-        <body className={`${RobotoSans.variable} ${RobotoMono.variable} flex w-full h-screen`}>
-          
-          <aside className="w-80 p-5 bg-gray-100">
-            <p>Logo</p>
+      <html
+        lang="en"
+        className={`${RobotoSans.variable} ${RobotoMono.variable} antialiased`}
+      >
+        <body className={`bg-slate-100 font-sans text-slate-900`}>
+          <AuthProvider>
+            <Toaster richColors closeButton />
 
-            <nav>
-              <ul>
-                <li><Link href="/admin/banner">Banner Manage</Link></li>
-              </ul>
-            </nav>
-          </aside>
-          
-          <main className="w-full flex flex-col">
-            <header>Dashboard Header</header>
-            <section>{children}</section>
-          </main>
+            <section className="flex h-screen w-full overflow-hidden">
+              <AdminSidebar />
+
+              <main className="flex min-w-0 flex-1 flex-col">
+                <AdminHeader />
+
+                <section className="flex-1 overflow-y-auto">
+                  <section className="mx-auto w-full p-5 flex flex-col gap-3">{children}</section>
+                </section>
+
+                <AdminFooter />
+              </main>
+            </section>
+          </AuthProvider>
         </body>
       </html>
     </>

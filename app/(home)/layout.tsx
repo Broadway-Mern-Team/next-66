@@ -3,6 +3,9 @@ import "../globals.css";
 import { Bricolage_Grotesque } from "next/font/google";
 import Header from "@/components/partials/Header";
 import Footer from "@/components/partials/Footer";
+import { Toaster } from "sonner";
+import AuthProvider from "@/lib/provider/AuthProvider";
+import Chatbot from "@/components/partials/Chatbot";
 
 const bricolageSans = Bricolage_Grotesque({
   variable: "--font-custom-sans",
@@ -21,12 +24,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en"
-      className={`${bricolageSans.variable} ${bricolageMono.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${bricolageSans.variable} ${bricolageMono.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col ">
-        <Header />
-        {children}
-        <Footer />
+        <AuthProvider>
+          <Toaster richColors closeButton />
+          <Header />
+          
+          {children}
+          
+          <Chatbot />
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );
