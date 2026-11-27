@@ -3,7 +3,7 @@ import { appConfig } from "./AppConfig";
 
 export const axiosClient = axios.create({
   baseURL: appConfig.apiBaseUrl, 
-  timeout: 30000,
+  timeout: 90000,
   timeoutErrorMessage: "Server timed out...",
   responseEncoding: "utf-8",
   responseType: "json",
