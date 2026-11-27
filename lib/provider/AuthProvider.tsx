@@ -56,9 +56,6 @@ export default function AuthProvider({children}: Readonly<{children: ReactNode}>
   }, [])
 
   return (
-    // loading ? 
-    // <>Loading...</> : 
-    // <>
       <AuthContext.Provider
         value={{
           loggedInUser: loggedInUser,
@@ -68,6 +65,5 @@ export default function AuthProvider({children}: Readonly<{children: ReactNode}>
       >
         {children}
       </AuthContext.Provider>
-    // </>
   )
 }
